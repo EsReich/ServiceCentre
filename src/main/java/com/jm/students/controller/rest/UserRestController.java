@@ -4,6 +4,7 @@ package com.jm.students.controller.rest;
 import com.jm.students.DTO.UserDTO;
 import com.jm.students.mappers.UserMapper;
 import com.jm.students.model.User;
+import com.jm.students.model.organization.AbstractOrganization;
 import com.jm.students.service.AbstractOrganizationService;
 import com.jm.students.service.UserService;
 import com.jm.students.service.util.EmailService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 

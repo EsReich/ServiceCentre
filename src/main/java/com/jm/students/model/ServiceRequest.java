@@ -5,6 +5,8 @@ import com.jm.students.model.organization.ServiceCenterOrganization;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -42,6 +44,13 @@ public class ServiceRequest {
     private User customer;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "request")
+    @LazyCollection(LazyCollectionOption.FALSE) //
+    /*
+        LazyCollectionOption :
+        .EXTRA = .size() and .contains() won't initialize the whole collection
+        .TRUE = initialize the whole collection on the first access (same as fetch = FetchType.LAZY)
+        .FALSE = eager loading (equals to fetch = FetchType.EAGER)
+     */
     private List<EquipmentOrder> orders = new ArrayList<>();
 
     public void addNewEquipmentOrder(EquipmentOrder order) {
@@ -70,10 +79,10 @@ public class ServiceRequest {
     private ServiceCenterOrganization serviceCenterOrganization;
 
     @ManyToOne
-    private User service_manager;
+    private User serviceManager;
 
     @ManyToOne
-    private User client_employee;
+    private User clientEmployee;
 
     @ManyToMany
     private List<User> engineers = new ArrayList<>();

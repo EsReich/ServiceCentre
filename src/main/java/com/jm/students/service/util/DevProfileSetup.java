@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.util.Arrays;
 
 /**
  * Для инициализации БД тестовыми данными необходимо в application.properties
@@ -56,8 +57,31 @@ public class DevProfileSetup {
         saveUser("managerName", "managerLastName"
                 , "manager","manager@mail.ru", serviceCenterOrganization, Role.MANAGER);
 
-        saveUser("engineerName", "engineerLastName"
+        User engineer = saveUser("engineerName", "engineerLastName"
                 , "engineer","engineer@mail.ru", serviceCenterOrganization, Role.ENGINEER);
+//        User engineer = new User();
+//        engineer.setFirstName("engineerName");
+//        engineer.setLastName("engineerLastName");
+//        engineer.setPassword("engineer");
+//        engineer.setEmail("engineer@mail.ru");
+//        engineer.setOrganization(serviceCenterOrganization);
+//        engineer.setRole(Role.ENGINEER);
+//
+//        ServiceRequest request = new ServiceRequest();
+//        request.setVehicleNumber("vehicleNumber12");
+//        request.setDateOfCreate(LocalDate.now());
+//        request.setRequestType(RequestType.REQUEST_TYPE_2);
+//        request.setStatusRequestType(StatusRequestType.NEW);
+//        request.setProblem("problem1");
+//        request.setCustomer(null);
+//        request.setOrders(null);
+//        request.addEngineer(engineer);
+//
+//        engineer.addNewServiceRequest(request);
+//
+//        userService.save(engineer);
+//        serviceRequestService.save(request);
+        //====================================
 
         User clientDirector = saveUser("clientDirectorName", "clientDirectorLastName"
                 , "clientDirector","client.director@mail.ru", clientOrganization, Role.CLIENT_DIRECTOR);
@@ -68,11 +92,11 @@ public class DevProfileSetup {
 
         saveServiceRequest("vehicleNumber1", LocalDate.now()
                 , RequestType.REQUEST_TYPE_1, StatusRequestType.NEW
-                , "problem1", clientDirector);
+                , "problem1", clientDirector, engineer);
 
         saveServiceRequest("vehicleNumber2", LocalDate.now()
                 , RequestType.REQUEST_TYPE_2, StatusRequestType.IN_WORK
-                , "problem2", clientEmployee);
+                , "problem2", clientEmployee, engineer);
     }
 
     private AbstractOrganization saveOrganization(AbstractOrganization organization, String name) {
@@ -100,7 +124,7 @@ public class DevProfileSetup {
 
     private void saveServiceRequest(String vehicleNumber
             , LocalDate date, RequestType requestType, StatusRequestType statusRequestType
-            , String problem, User customer) {
+            , String problem, User customer, User... engineers) {
 
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setVehicleNumber(vehicleNumber);
@@ -109,6 +133,8 @@ public class DevProfileSetup {
         serviceRequest.setStatusRequestType(statusRequestType);
         serviceRequest.setProblem(problem);
         serviceRequest.setCustomer(customer);
+
+        Arrays.stream(engineers).forEach(serviceRequest::addEngineer);
 
         serviceRequestService.save(serviceRequest);
     }
